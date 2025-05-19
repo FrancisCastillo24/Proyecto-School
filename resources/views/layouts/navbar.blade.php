@@ -16,7 +16,7 @@
             <ul
                 class="navbar-nav w-100 d-flex flex-column align-items-center text-center mb-2 mb-lg-0 flex-lg-row justify-content-center">
                 <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Home</a></li>
-                <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Features</a></li>
+                <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="{{ route('admin.student.index') }}">Alumnos</a></li>
                 <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Pricing</a></li>
                 <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Blog</a></li>
                 <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Contacto</a></li>
