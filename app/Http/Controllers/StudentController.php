@@ -4,88 +4,139 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 use App\Models\Student;
 use App\Models\User;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function __construct()
     {
-        //Muestra el listado de estudiantes
-        $user = Auth::user();
-        $students = Student::all();
+        $this->middleware('auth');
 
-        if (!$user || !$user->isAdmin()) {
-            abort(403, 'Acceso no autorizado');
-        }
+        // Aquí validas el rol para que solo ciertos métodos se ejecuten según el rol
+        $this->middleware(function ($request, $next) {
+            $user = auth()->user();
 
-        return view('admin.student.index', ['students' => $students]);
+            // Ejemplo: Si la ruta tiene prefijo admin, solo para admins
+            if ($request->is('admin/*') && (!$user || !$user->isAdmin())) {
+                abort(403, 'Acceso no autorizado para admins');
+            }
+
+            // Si la ruta NO tiene prefijo admin, pero es admin, bloquear acceso a estas rutas?
+            // O al revés según la lógica que quieras.
+
+            return $next($request);
+        });
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function index()
+    {
+        $user = Auth::user();
+
+        // if (!$user || !$user->isAdmin()) {
+        //     abort(403, 'Acceso no autorizado');
+        // }
+
+        $students = Student::all();
+
+        // Contar usuarios sin estudiante
+        $usuariosSinEstudiante = User::whereDoesntHave('student')->count();
+
+        return view('admin.student.index', compact('students', 'usuariosSinEstudiante'));
+    }
+
+
+
     public function create()
     {
-        // Muestro el formulario para crear un estudiante con los datos de usuario
-        $users = User::all();
+        // Muestro solo los usuarios que aún no tienen un estudiante asignado
+        $users = User::whereDoesntHave('student')->get();
         return view('admin.student.create', ['users' => $users]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
-        // Almaceno los datos del formulario de estudiante
+        $request->validate([
+            'user_id' => 'nullable|exists:users,id',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string',
+            // Campos obligatorios solo si NO se seleccionó usuario
+            'name' => 'required_without:user_id|string|max:255',
+            'email' => 'required_without:user_id|email|unique:users,email',
+            'password' => 'required_without:user_id|string|min:6|confirmed',
+        ]);
+
+        if ($request->user_id) {
+            // Usuario existente
+            $user_id = $request->user_id;
+        } else {
+            // Crear nuevo usuario
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+            $user_id = $user->id;
+        }
+
+        Student::create([
+            'user_id' => $user_id,
+            'address' => $request->address,
+            'phone' => $request->phone,
+        ]);
+
+        return redirect()->route('admin.student.index')->with('success', 'Estudiante registrado correctamente');
+    }
+
+
+
+    public function edit(string $id)
+    {
+        $user = Auth::user();
+
+        // if (!$user || !$user->isAdmin()) {
+        //     abort(403, 'Acceso no autorizado');
+        // }
+
+        $student = Student::findOrFail($id);
+        $users = User::all();
+
+        return view('admin.student.edit', [
+            'student' => $student,
+            'users' => $users
+        ]);
+    }
+
+
+    public function update(Request $request, string $id)
+    {
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'address' => 'required|string|max:255',
-            'phone' => 'required|string|',
+            'phone' => 'required|string',
         ]);
 
-        Student::create([
-        'user_id' => $request->user_id,
-        'address' => $request->address,
-        'phone' => $request->phone,
+        $student = Student::findOrFail($id);
+        $student->update([
+            'user_id' => $request->user_id,
+            'address' => $request->address,
+            'phone' => $request->phone,
         ]);
 
-        return redirect()->route('admin.student.index');
+        return redirect()->route('admin.student.index')->with('success', 'Estudiante actualizado correctamente');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
+        $student = Student::findOrFail($id);
+        $student->delete();
+
+        return redirect()->route('admin.student.index')->with('success', 'Estudiante eliminado correctamente');
     }
 }

@@ -66,6 +66,16 @@
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="login-glass">
+                        <div class="container">
+                            @if (session('success'))
+                                <div class="d-flex justify-content-center">
+                                    <div class="alert alert-info px-4 py-2" style="max-width: fit-content;">
+                                        {{ session('success') }}
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
                         <div class="login-title">Bienvenido a Academia Velázquez</div>
 
                         <form method="POST" action="{{ route('login') }}">

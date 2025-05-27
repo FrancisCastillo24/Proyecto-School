@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -67,6 +68,22 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'is_approved' => false,  // Por defecto no aprobado
         ]);
+    }
+
+
+    public function register(Request $request)
+    {
+        // Validaciones y creación del usuario
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'is_approved' => false, // por ejemplo
+        ]);
+
+        // No loguear al usuario, solo redirigir con mensaje
+        return redirect()->route('login')->with('success', 'Tu cuenta está pendiente de aprobación por el administrador');
     }
 }

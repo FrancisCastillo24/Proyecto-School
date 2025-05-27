@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth as AuthFacade;
+
+
 
 class LoginController extends Controller
 {
@@ -40,11 +44,19 @@ class LoginController extends Controller
     }
 
     protected function authenticated(Request $request, $user)
-{
-    if ($user->role === 'admin') {
-        return redirect()->route('homeAdmin');
-    }
+    {
+        if (!$user->is_approved) {
+            Auth::logout();
 
-    return redirect()->route('homeUser');
-}
+            return redirect()->route('login')->withErrors([
+                'email' => 'Tu cuenta está pendiente de aprobación por el administrador.',
+            ]);
+        }
+
+        if ($user->role === 'admin') {
+            return redirect()->route('homeAdmin');
+        }
+
+        return redirect()->route('homeUser');
+    }
 }

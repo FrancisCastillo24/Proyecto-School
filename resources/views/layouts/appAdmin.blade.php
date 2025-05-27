@@ -15,28 +15,28 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </head>
 
 <body>
-    <div id="app">
-        <div class="container">
-            @include('layouts.header')
-        </div>
+<div id="admin-app" class="d-flex flex-column flex-lg-row min-vh-100">
 
-        @include('layouts.navbar')
+    @include('layouts.admin.navbar')
 
-        <div class="container">
-            <main class="py-4">
-                @yield('content')
-            </main>
-        </div>
-        
-        <!-- Pie de página -->
-        @include('layouts.footer')
-    </div>
+  <!-- Contenido principal -->
+  <main class="flex-grow-1 d-flex justify-content-center align-items-lg-center align-items-start p-4" style="min-height: 100vh;">
+    @yield('content')
+  </main>
+
+</div>
+
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+
+
 </body>
+
+
 
 </html>
