@@ -18,7 +18,7 @@ class StudentController extends Controller
 
         // Aquí validas el rol para que solo ciertos métodos se ejecuten según el rol
         $this->middleware(function ($request, $next) {
-            $user = auth()->user();
+            $user = Auth::user();
 
             // Ejemplo: Si la ruta tiene prefijo admin, solo para admins
             if ($request->is('admin/*') && (!$user || !$user->isAdmin())) {

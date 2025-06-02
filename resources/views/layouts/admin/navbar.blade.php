@@ -9,13 +9,13 @@
           </button>
 
           <!-- Marca / título centrado en móvil -->
-          <a class="navbar-brand mx-auto mb-3 mb-lg-4" href="#">Panel</a>
+          <a class="navbar-brand mx-auto mb-3 mb-lg-4" href="{{ route('homeAdmin') }}">Panel</a>
 
           <!-- Menú colapsable -->
           <div class="collapse navbar-collapse flex-lg-column text-center text-lg-start" id="adminMenu">
               <ul class="navbar-nav flex-column w-100">
                   <li class="nav-item">
-                      <a class="nav-link active" href="#"><i class="bi bi-house-door-fill me-2"></i>Inicio</a>
+                      <a class="nav-link active" href="{{ route('homeAdmin') }}"><i class="bi bi-house-door-fill me-2"></i>Inicio</a>
                   </li>
                   <li class="nav-item">
                       <a class="nav-link" href="{{ route('admin.student.index') }}"><i
@@ -26,7 +26,11 @@
                           <i class="bi bi-gear-fill me-2"></i>Aprobar usuario
                       </a>
                   </li>
-
+                  <li class="nav-item">
+                      <a class="nav-link" href="{{ route('admin.review.index') }}">
+                          <i class="bi bi-chat-left-quote-fill me-2"></i> Testimonios
+                      </a>
+                  </li>
                   <li class="nav-item">
                       <a class="nav-link" href="#"
                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

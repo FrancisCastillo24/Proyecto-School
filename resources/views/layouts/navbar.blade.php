@@ -15,10 +15,10 @@
             <!-- Menú principal centrado -->
             <ul
                 class="navbar-nav w-100 d-flex flex-column align-items-center text-center mb-2 mb-lg-0 flex-lg-row justify-content-center">
-                <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Home</a></li>
-                <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Cursos para jovenes</a></li>
+                <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="{{ route('home') }}">Home</a></li>
+                <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="{{ route('course.index') }}">Cursos para jovenes</a></li>
                 <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Preparación de examenes</a></li>
-                <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Testimonios</a></li>
+                <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="{{ route('review.index') }}">Testimonios</a></li>
                 <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Blog</a></li>
             </ul>
             

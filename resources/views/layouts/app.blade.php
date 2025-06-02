@@ -17,7 +17,6 @@
     <!-- Scripts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </head>
 
 <body>
@@ -28,15 +27,15 @@
 
         @include('layouts.navbar')
 
-        <div class="container">
-            <main class="py-4">
-                @yield('content')
-            </main>
-        </div>
-        
-        <!-- Pie de página -->
+        <main class="py-4">
+            @yield('content')
+        </main>
+
         @include('layouts.footer')
     </div>
+
+    @yield('scripts')
+
 </body>
 
 </html>

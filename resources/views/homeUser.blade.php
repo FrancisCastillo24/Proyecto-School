@@ -3,10 +3,11 @@
 @section('content')
 
 <!-- Hero principal -->
-<div class="container-fluid bg-primary text-white text-center py-5">
-    <h1 class="display-4 fw-bold animate__animated animate__fadeInDown">Bienvenido a la Academia Velázquez</h1>
-    <p class="lead animate__animated animate__fadeInUp">Impulsamos tu futuro académico con clases de calidad y profesores expertos.</p>
+<div class="container-fluid" style="background-color: #2c3e50; color: #ecf0f1; text-align: center; padding: 3rem 1rem;">
+    <h1 class="display-4 fw-bold" style="font-weight: 700;">Bienvenido a la Academia Velázquez</h1>
+    <p class="lead" style="color: #bdc3c7;">Impulsamos tu futuro académico con clases de calidad y profesores expertos.</p>
 </div>
+
 
 <!-- Sección de clases -->
 <div class="container py-5">
