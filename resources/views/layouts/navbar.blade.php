@@ -19,7 +19,7 @@
                 <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="{{ route('course.index') }}">Cursos para jovenes</a></li>
                 <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="{{ route('event.index') }}">Eventos</a></li>
                 <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="{{ route('review.index') }}">Testimonios</a></li>
-                <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="#">Blog</a></li>
+                <li class="nav-item my-1 mx-lg-2"><a class="nav-link px-3" href="{{ route('blog.index') }}">Blog</a></li>
             </ul>
             
             <!-- Usuario visible SOLO en móviles dentro del colapsable -->

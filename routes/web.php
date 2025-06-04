@@ -19,6 +19,8 @@ Route::resource('course', CourseController::class)->only(['index', 'show']);
 Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
 Route::get('/review/create', [ReviewController::class, 'create'])->name('review.create');
 Route::resource('event', EventController::class);
+Route::view('/blog', 'user.blog.index')->name('blog.index');
+
 
 // Rutas protegidas por autenticación
 Route::middleware('auth')->group(function () {

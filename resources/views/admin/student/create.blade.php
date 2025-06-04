@@ -14,8 +14,6 @@
         </div>
     @endif
 
-    <button id="btnPrueba">PRUEBA</button>
-
     <form action="{{ route('admin.student.store') }}" method="POST" class="bg-white p-4 rounded shadow-sm" id="studentForm">
         @csrf
 
@@ -71,27 +69,8 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Registrar</button>
+        <a href="{{ route('admin.student.index') }}" class="btn btn-secondary">Regresar</a>
+
     </form>
 </div>
-
-<script>
-    const userSelect = document.getElementById('user_id');
-    const newUserFields = document.getElementById('newUserFields');
-
-    function toggleNewUserFields() {
-        if (userSelect.value !== "") {
-            newUserFields.querySelectorAll('input').forEach(input => {
-                input.disabled = true;
-                input.required = false;
-            });
-        } else {
-            newUserFields.querySelectorAll('input').forEach(input => {
-                input.disabled = false;
-            });
-        }
-    }
-
-    userSelect.addEventListener('change', toggleNewUserFields);
-    window.onload = toggleNewUserFields;
-</script>
 @endsection

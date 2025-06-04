@@ -18,23 +18,27 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    @vite(['resources/js/app.js', 'resources/js/cursos/curso.js', 'resources/js/student/student-form.js'])
+
 </head>
 
 <body>
-<div id="admin-app" class="d-flex flex-column flex-lg-row min-vh-100">
+    <div id="admin-app" class="d-flex flex-column flex-lg-row min-vh-100">
 
-    @include('layouts.admin.navbar')
+        @include('layouts.admin.navbar')
 
-  <!-- Contenido principal -->
-  <main class="flex-grow-1 d-flex justify-content-center align-items-lg-center align-items-start p-4" style="min-height: 100vh;">
-    @yield('content')
-  </main>
+        <!-- Contenido principal -->
+        <main class="flex-grow-1 d-flex justify-content-center align-items-lg-center align-items-start p-4"
+            style="min-height: 100vh;">
+            @yield('content')
+        </main>
 
-</div>
+    </div>
 
-<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
 
-@yield('scripts')
+    @yield('scripts')
 </body>
 
 
