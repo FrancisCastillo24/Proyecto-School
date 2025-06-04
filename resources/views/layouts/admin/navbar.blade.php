@@ -15,7 +15,8 @@
           <div class="collapse navbar-collapse flex-lg-column text-center text-lg-start" id="adminMenu">
               <ul class="navbar-nav flex-column w-100">
                   <li class="nav-item">
-                      <a class="nav-link active" href="{{ route('homeAdmin') }}"><i class="bi bi-house-door-fill me-2"></i>Inicio</a>
+                      <a class="nav-link active" href="{{ route('homeAdmin') }}"><i
+                              class="bi bi-house-door-fill me-2"></i>Inicio</a>
                   </li>
                   <li class="nav-item">
                       <a class="nav-link" href="{{ route('admin.student.index') }}"><i
@@ -29,6 +30,11 @@
                   <li class="nav-item">
                       <a class="nav-link" href="{{ route('admin.review.index') }}">
                           <i class="bi bi-chat-left-quote-fill me-2"></i> Testimonios
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{{ route('admin.event.index') }}">
+                          <i class="bi bi-calendar-event me-2"></i> Eventos
                       </a>
                   </li>
                   <li class="nav-item">

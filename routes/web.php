@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\UserApprovalController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StudentController;
@@ -14,9 +15,10 @@ Route::get('/', function () {
 })->name('home');
 
 // Rutas públicas
+Route::resource('course', CourseController::class)->only(['index', 'show']);
 Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
 Route::get('/review/create', [ReviewController::class, 'create'])->name('review.create');
-Route::resource('course', CourseController::class)->only(['index', 'show']);
+Route::resource('event', EventController::class);
 
 // Rutas protegidas por autenticación
 Route::middleware('auth')->group(function () {
@@ -35,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('student', StudentController::class);
         Route::resource('review', ReviewController::class);
+        Route::resource('event', EventController::class);
         Route::get('users/pending', [UserApprovalController::class, 'pending'])->name('users.pending');
         Route::post('users/{user}/approve', [UserApprovalController::class, 'approve'])->name('users.approve');
     });

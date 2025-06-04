@@ -102,11 +102,8 @@
                 <p class="text-muted">No hay estudiantes registrados.</p>
             @endforelse
         </div>
-
-        <div class="text-end mt-3">
-            <a href="{{ route('admin.student.create') }}" class="btn btn-outline-primary">
-                Registrar nuevo usuario
-            </a>
-        </div>
+        <a href="{{ route('admin.student.create') }}" class="btn btn-outline-primary fw-semibold">
+            <i class="bi bi-plus-circle me-1"></i> Registrar nuevo usuario
+        </a>
     </div>
 @endsection

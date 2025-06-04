@@ -49,18 +49,32 @@ class ReviewController extends Controller
 
     public function edit(string $id)
     {
-        //
+        $review = Review::findOrFail($id);
+        return view('admin.review.edit', ['review' => $review]);
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Review $review)
     {
-        //
+        // Validación de campos
+        $validated = $request->validate([
+            'opinion' => 'required|string|min:10|max:1000',  // opinión requerida, texto entre 10 y 1000 caracteres
+            'rating'  => 'required|integer|between:1,5',
+        ]);
+
+        // Actualizar el testimonio con los datos validados
+        $review->update($validated);
+
+        // Redireccionar con mensaje de éxito
+        return redirect()->route('review.index')->with('success', 'Testimonio actualizado exitosamente.');
     }
 
 
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $review = Review::findOrFail($id);
+        $review->delete();
+
+        return redirect()->route('review.index')->with('success', 'Testimonio eliminado correctamente.');
     }
 }

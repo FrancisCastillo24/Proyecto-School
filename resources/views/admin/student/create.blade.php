@@ -4,7 +4,19 @@
 <div class="container mt-4">
     <h2 class="mb-4">Registrar nuevo estudiante</h2>
 
-    <form action="{{ route('student.store') }}" method="POST" class="bg-white p-4 rounded shadow-sm" id="studentForm">
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <button id="btnPrueba">PRUEBA</button>
+
+    <form action="{{ route('admin.student.store') }}" method="POST" class="bg-white p-4 rounded shadow-sm" id="studentForm">
         @csrf
 
         <div class="mb-3">
@@ -20,10 +32,8 @@
             <small class="form-text text-muted">Si no seleccionas usuario, debes crear uno nuevo abajo.</small>
         </div>
 
-        <hr>
-
-        <div id="newUserFields" style="display: none;">
-            <h5>Crear un usuario nuevo:</h5>
+        <div id="newUserFields">
+            <h5 class="mt-4">Crear un usuario nuevo:</h5>
 
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre de Usuario</label>
@@ -44,9 +54,9 @@
                 <label for="password_confirmation" class="form-label">Confirmar Contraseña</label>
                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
             </div>
-
-            <hr>
         </div>
+
+        <hr>
 
         <div class="row">
             <div class="mb-3 col-md-6">
@@ -69,21 +79,19 @@
     const newUserFields = document.getElementById('newUserFields');
 
     function toggleNewUserFields() {
-        if (userSelect.value) {
-            newUserFields.style.display = 'none';
-            // Opcional: limpiar campos
-            document.getElementById('name').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('password_confirmation').value = '';
+        if (userSelect.value !== "") {
+            newUserFields.querySelectorAll('input').forEach(input => {
+                input.disabled = true;
+                input.required = false;
+            });
         } else {
-            newUserFields.style.display = 'block';
+            newUserFields.querySelectorAll('input').forEach(input => {
+                input.disabled = false;
+            });
         }
     }
 
     userSelect.addEventListener('change', toggleNewUserFields);
-
-    // Ejecutar al cargar la página para respetar old()
     window.onload = toggleNewUserFields;
 </script>
 @endsection

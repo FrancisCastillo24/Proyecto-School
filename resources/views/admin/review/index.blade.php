@@ -23,8 +23,9 @@
                 <thead class="table-light">
                     <tr>
                         <th>ID</th>
+                        <th>Opinión</th>
                         <th>Valoración</th>
-                        <th>Fecha Creación</th>
+                        <th>Fecha creación</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -96,12 +97,6 @@
             @empty
                 <p class="text-muted text-center">No hay testimonios registrados en el sistema.</p>
             @endforelse
-        </div>
-
-        <div class="text-end mt-4">
-            <a href="{{ route('review.create') }}" class="btn btn-outline-primary fw-semibold">
-                <i class="bi bi-plus-circle me-1"></i> Agregar nuevo testimonio
-            </a>
         </div>
     </div>
 @endsection
