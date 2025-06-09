@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\UserApprovalController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
@@ -19,6 +20,7 @@ Route::resource('course', CourseController::class)->only(['index', 'show']);
 Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
 Route::get('/review/create', [ReviewController::class, 'create'])->name('review.create');
 Route::resource('event', EventController::class);
+Route::resource('booking', BookingController::class);
 Route::view('/blog', 'user.blog.index')->name('blog.index');
 
 
@@ -40,6 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('student', StudentController::class);
         Route::resource('review', ReviewController::class);
         Route::resource('event', EventController::class);
+        Route::resource('booking', BookingController::class);
         Route::get('users/pending', [UserApprovalController::class, 'pending'])->name('users.pending');
         Route::post('users/{user}/approve', [UserApprovalController::class, 'approve'])->name('users.approve');
     });

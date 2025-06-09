@@ -29,6 +29,9 @@
 
         <main class="py-4">
             @yield('content')
+
+            @vite('resources/js/booking/formReserva.js')
+
         </main>
 
         @include('layouts.footer')

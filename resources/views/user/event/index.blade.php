@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="container mt-4">
+        <div id="mensaje" style="color: green; margin-top: 10px;"></div>
         <h2 class="mb-4">Lista de Eventos</h2>
         <div class="table-responsive">
             <table class="table table-hover table-bordered align-middle shadow text-center">
@@ -34,9 +35,15 @@
             </table>
         </div>
 
-        <a href="" class="btn btn-secondary btn-sm">
+        <a href="{{ route('booking.create') }}" id="btnNewBooking" class="btn btn-secondary btn-sm">
             Reservar
         </a>
+
+        <div id="bookingFormContainer" class="mt-3"></div>
+
+
+    </div>
+
 
     </div>
 @endsection
