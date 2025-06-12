@@ -10,15 +10,14 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        // Cargar usuario, estudiante y eventos para cada transacción
-        $transactions = Transaction::with('user.student', 'user.events')->paginate(10);
-
+        // Cargo el usuario con sus reservas y eventos a través de reservas
+        $transactions = Transaction::with('user.bookings.event', 'user.student')->paginate(10);
         return view('admin.transaction.index', compact('transactions'));
     }
 
     public function create()
     {
-        $users = User::all();
+        $users = User::all(); // Para el select de alumnos registrados
         return view('admin.transaction.create', compact('users'));
     }
 
@@ -29,8 +28,10 @@ class TransactionController extends Controller
             'price_per_entry' => 'required|numeric|min:0',
         ]);
 
-        $user = User::withCount('events')->findOrFail($request->user_id);
-        $quantity = $user->events_count;
+        $user = User::with('bookings')->findOrFail($request->user_id);
+
+        // Sumamos la cantidad de todas las reservas para ese usuario
+        $quantity = $user->bookings->sum('quantity');
 
         $total_price = $quantity * $request->price_per_entry;
 
@@ -61,8 +62,9 @@ class TransactionController extends Controller
             'price_per_entry' => 'required|numeric|min:0',
         ]);
 
-        $user = User::withCount('events')->findOrFail($request->user_id);
-        $quantity = $user->events_count;
+        $user = User::with('bookings')->findOrFail($request->user_id);
+
+        $quantity = $user->bookings->sum('quantity');
 
         $transaction->update([
             'user_id' => $request->user_id,

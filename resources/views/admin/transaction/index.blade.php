@@ -16,7 +16,8 @@
                 <th>ID</th>
                 <th>Alumno</th>
                 <th>Teléfono</th>
-                <th>Eventos</th>
+                <th>Eventos (reservas)</th>
+                <th>Detalle de Eventos</th>
                 <th>Precio por evento</th>
                 <th>Precio total</th>
                 <th>Acciones</th>
@@ -28,11 +29,13 @@
                     <td>{{ $transaction->id }}</td>
                     <td>{{ $transaction->user?->name ?? 'Sin usuario' }}</td>
                     <td>{{ $transaction->user?->student?->phone ?? 'No tiene teléfono' }}</td>
+                    <td>{{ $transaction->user?->bookings->sum('quantity') ?? 0 }}</td>
                     <td>
-                        {{ $transaction->user?->events->count() ?? 0 }} <br>
-                        @foreach($transaction->user?->events ?? [] as $event)
-                            - {{ $event->name }}<br>
-                        @endforeach
+                        @forelse($transaction->user?->bookings as $booking)
+                            {{ $booking->event?->name ?? 'Evento no definido' }} ({{ $booking->quantity }})<br>
+                        @empty
+                            No tiene reservas
+                        @endforelse
                     </td>
                     <td>{{ number_format($transaction->price_per_entry, 2) }} €</td>
                     <td>{{ number_format($transaction->total_price, 2) }} €</td>
