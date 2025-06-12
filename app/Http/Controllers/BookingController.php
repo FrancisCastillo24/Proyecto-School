@@ -16,7 +16,7 @@ class BookingController extends Controller
     {
         // Compruebo si es admin o usuario y muestro sus vistas
         $user = Auth::user();
-        $bookings = Booking::all();
+        $bookings = Booking::with('event')->paginate(5);
 
         if ($user && $user->isAdmin()) {
             return view('admin.booking.index', ['bookings' => $bookings]);
@@ -47,10 +47,10 @@ public function store(Request $request)
 {
     Booking::create([
         'user_id'  => Auth::check() ? Auth::id() : null,
-        'phone'    => $request->phone,
-        'quantity' => $request->quantity,
         'name'     => $request->name,
         'event_id' => $request->event_id,
+        'quantity' => $request->quantity,
+        'phone'    => $request->phone,
     ]);
 
     if ($request->ajax()) {

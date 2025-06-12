@@ -43,6 +43,12 @@
                       </a>
                   </li>
                   <li class="nav-item">
+                      <a class="nav-link" href="{{ route('admin.transaction.index') }}">
+                          <i class="bi bi-calculator"></i> Contabilidad
+                      </a>
+                  </li>
+
+                  <li class="nav-item">
                       <a class="nav-link" href="#"
                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                           <i class="bi bi-box-arrow-right me-2"></i>Salir

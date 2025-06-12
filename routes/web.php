@@ -7,6 +7,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,6 +44,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('review', ReviewController::class);
         Route::resource('event', EventController::class);
         Route::resource('booking', BookingController::class);
+        Route::resource('transaction', TransactionController::class);
         Route::get('users/pending', [UserApprovalController::class, 'pending'])->name('users.pending');
         Route::post('users/{user}/approve', [UserApprovalController::class, 'approve'])->name('users.approve');
     });
