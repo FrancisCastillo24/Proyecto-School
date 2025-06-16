@@ -8,82 +8,70 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
     use RegistersUsers;
 
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
     protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
     protected function validator(array $data)
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users,email',
+                // Validación personalizada para email rechazado
+                function ($attribute, $value, $fail) {
+                    $user = User::where('email', $value)->first();
+                    if ($user && $user->is_rejected) {
+                        $fail('Este correo electrónico fue rechazado y no puede usarse para registrarse.');
+                    }
+                }
+            ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\Models\User
-     */
     protected function create(array $data)
     {
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'is_approved' => false,  // Por defecto no aprobado
+            'is_approved' => false,
+            'is_rejected' => false, // por defecto no rechazado
         ]);
     }
 
-
     public function register(Request $request)
     {
-        // Validaciones y creación del usuario
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'is_approved' => false, // por ejemplo
-        ]);
+        // Verificar si el email está bloqueado
+        $isBlocked = DB::table('blocked_emails')
+            ->where('email', $request->input('email'))
+            ->exists();
 
-        // No loguear al usuario, solo redirigir con mensaje
+        if ($isBlocked) {
+            return redirect()->back()->withErrors([
+                'email' => 'Este correo ha sido bloqueado por el administrador.',
+            ])->withInput();
+        }
+
+        // Validar datos y registrar
+        $this->validator($request->all())->validate();
+
+        $user = $this->create($request->all());
+
         return redirect()->route('login')->with('success', 'Tu cuenta está pendiente de aprobación por el administrador');
     }
 }

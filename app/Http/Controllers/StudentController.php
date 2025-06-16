@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Student;
@@ -6,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -26,7 +28,6 @@ class StudentController extends Controller
         $users = User::whereDoesntHave('student')->get();
         return view('admin.student.create', compact('users'));
     }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -40,11 +41,20 @@ class StudentController extends Controller
 
         if ($request->filled('user_id')) {
             $user_id = $request->user_id;
+
+            // Asegurar que el usuario tenga el rol y esté aprobado también (opcional)
+            $user = User::find($user_id);
+            $user->update([
+                'role' => 'student',
+                'is_approved' => true,
+            ]);
         } else {
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'role' => 'student',
+                'is_approved' => true,
             ]);
             $user_id = $user->id;
         }
@@ -57,6 +67,7 @@ class StudentController extends Controller
 
         return redirect()->route('admin.student.index')->with('success', 'Estudiante registrado correctamente');
     }
+
 
     public function index()
     {

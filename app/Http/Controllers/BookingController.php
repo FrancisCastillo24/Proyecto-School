@@ -9,102 +9,107 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Listar reservas según rol
     public function index()
     {
-        // Compruebo si es admin o usuario y muestro sus vistas
         $user = Auth::user();
-        $bookings = Booking::with('event')->paginate(5);
 
         if ($user && $user->isAdmin()) {
-            return view('admin.booking.index', ['bookings' => $bookings]);
+            $bookings = Booking::with('event')->paginate(5);
+            return view('admin.booking.index', compact('bookings'));
         }
 
-        return view('user.booking.index');
+        $bookings = Booking::with('event')->where('user_id', $user->id)->paginate(5);
+        return view('user.booking.index', compact('bookings'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Mostrar formulario para crear reserva
+    public function create(Request $request)
     {
-        if (request()->ajax()) {
-            $events = Event::all(['id', 'name']);
-            return view('user.booking._form', ['events' => $events]); // Formulario parcial para ajax
+        if (!Auth::check()) {
+            if ($request->ajax()) {
+                return response()->json(['error' => 'Debes autenticarte para reservar'], 401);
+            }
+            return redirect()->route('login')->withErrors('Debes iniciar sesión para reservar.');
         }
 
-        return redirect()->route('booking.index'); // Redirige al listado si no es ajax
+        $events = Event::all(['id', 'name']);
+
+        if ($request->ajax()) {
+            // Devuelve solo el fragmento para insertar vía JS
+            return view('user.booking._form', compact('events'));
+        }
+
+        // Vista completa para petición normal
+        return view('user.booking.create', compact('events'));
     }
 
+    // Guardar reserva (soporte AJAX y peticiones normales)
+    public function store(Request $request)
+    {
+        $rules = [
+            'name'     => 'required|string|max:100',
+            'event_id' => 'required|exists:events,id',
+            'quantity' => 'required|integer|min:1',
+            'phone'    => 'required|string|max:20',
+        ];
 
+        $validated = $request->validate($rules);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-public function store(Request $request)
-{
-    Booking::create([
-        'user_id'  => Auth::check() ? Auth::id() : null,
-        'name'     => $request->name,
-        'event_id' => $request->event_id,
-        'quantity' => $request->quantity,
-        'phone'    => $request->phone,
-    ]);
-
-    if ($request->ajax()) {
-        return response()->json([
-            'message' => 'Reserva creada con éxito'
+        $booking = Booking::create([
+            'user_id'  => Auth::id(),
+            'name'     => $validated['name'],
+            'event_id' => $validated['event_id'],
+            'quantity' => $validated['quantity'],
+            'phone'    => $validated['phone'],
         ]);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'message' => 'Reserva creada con éxito',
+                'booking' => $booking->load('event'),
+            ]);
+        }
+
+        return redirect()->route('booking.index')->with('success', 'Reserva creada con éxito');
     }
 
-    return redirect()->route('booking.index')->with('success', 'Reserva creada con éxito');
-}
-
-
-
-
-
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Mostrar formulario para editar reserva
     public function edit(string $id)
     {
-        // El usuario modifica la reserva realizada
         $booking = Booking::findOrFail($id);
-        return view('user.booking.index', ['booking' => $booking]);
+
+        // Opcional: validar que el usuario puede editar (propio o admin)
+        $this->authorize('update', $booking);
+
+        return view('user.booking.edit', compact('booking'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Actualizar reserva
     public function update(Request $request, Booking $booking)
     {
-        // Actualizamos los datos nuevos
-        $validated = $request->validate([
-            'user_id'     => 'required|exists:users,id',
-            'quantity'    => 'required|integer|min:1',
-            'name'        => 'required|string|max:100',
-        ]);
+        $this->authorize('update', $booking);
 
-        // Actualizar el testimonio con los datos validados
+        $rules = [
+            'name'     => 'required|string|max:100',
+            'quantity' => 'required|integer|min:1',
+            'phone'    => 'required|string|max:20',
+        ];
+
+        $validated = $request->validate($rules);
+
         $booking->update($validated);
 
-        // Redireccionar con mensaje de éxito
-        return redirect()->route('booking.index')->with('success', 'Reserva actualizado exitosamente.');
+        return redirect()->route('booking.index')->with('success', 'Reserva actualizada exitosamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Eliminar reserva
     public function destroy(Booking $booking)
     {
-        // Eliminamos una única reserva
+        $this->authorize('delete', $booking);
+
         $booking->delete();
 
-        return redirect()->route('booking.index')->with('success', 'Reserva eliminado correctamente.');
+        return redirect()->route('booking.index')->with('success', 'Reserva eliminada correctamente.');
     }
 }

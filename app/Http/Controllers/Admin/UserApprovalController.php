@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserApprovalController extends Controller
 {
@@ -33,5 +34,22 @@ class UserApprovalController extends Controller
         $user->save();
 
         return redirect()->back()->with('success', 'Usuario aprobado correctamente.');
+    }
+
+    public function destroy(User $user)
+    {
+        // Verificar si el email ya está bloqueado
+        $exists = DB::table('blocked_emails')->where('email', $user->email)->exists();
+
+        if (!$exists) {
+            DB::table('blocked_emails')->insert([
+                'email' => $user->email,
+                'created_at' => now(),
+            ]);
+        }
+
+        $user->delete();
+
+        return redirect()->back()->with('success', 'Usuario eliminado y su correo ha sido bloqueado.');
     }
 }

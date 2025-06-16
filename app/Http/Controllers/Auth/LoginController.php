@@ -6,37 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Auth as AuthFacade;
-
-
+use Illuminate\Support\Facades\Cookie;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
     protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
@@ -45,12 +22,23 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
+        // Guardar email en cookie por 7 días si recordarme está activo
+        if ($request->has('remember')) {
+            Cookie::queue('email', $request->email, 60 * 24 * 7); // 7 días
+        } else {
+            Cookie::queue(Cookie::forget('email'));
+        }
+
+        if ($user->is_rejected) {
+            Auth::logout();
+
+            return redirect()->route('login')->with('error', 'Tu cuenta fue rechazada. No puedes iniciar sesión.');
+        }
+
         if (!$user->is_approved) {
             Auth::logout();
 
-            return redirect()->route('login')->withErrors([
-                'email' => 'Tu cuenta está pendiente de aprobación por el administrador.',
-            ]);
+            return redirect()->route('login')->with('error', 'Tu cuenta está pendiente de aprobación por el administrador.');
         }
 
         if ($user->role === 'admin') {

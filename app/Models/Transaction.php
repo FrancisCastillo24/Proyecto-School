@@ -11,6 +11,7 @@ class Transaction extends Model
 
     protected $fillable = [
         'user_id',
+        'enrollment_fee',
         'price_per_entry',
         'total_price',
     ];
@@ -25,5 +26,13 @@ class Transaction extends Model
     public function event()
     {
         return $this->belongsTo(Event::class);
+    }
+
+    // Si elimino un usuario, se elimina la transación (una forma de hacerlo en lugar de en cascada desde migración)
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+            $user->transactions()->delete();
+        });
     }
 }

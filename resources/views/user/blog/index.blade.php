@@ -4,9 +4,9 @@
 <!-- HERO -->
 <div class="bg-dark text-white text-center py-5" style="background: url('https://source.unsplash.com/1600x400/?education') center/cover;">
   <div class="container">
-    <h1 class="display-4 fw-bold">Bienvenido a la Academia Saber+</h1>
-    <p class="lead">Formación de calidad para transformar tu futuro.</p>
-    <a href="#registro" class="btn btn-primary btn-lg mt-3">Únete ahora</a>
+    <h1 class="display-4 fw-bold">Bienvenido a la Academia Velázquez</h1>
+    <p class="lead">Formación de calidad para transformar tu futuro. Cursos intensivos y eventos únicos y divertidos. ¿Eres alumno?, pues únete e infórmate de las últimas novedades</p>
+    <a href="{{ route('login') }}" class="btn btn-primary btn-lg mt-3">Únete ahora</a>
   </div>
 </div>
 
@@ -88,13 +88,12 @@
         <div class="card shadow-sm">
           <div class="card-body">
             <p class="mb-4">Completa este formulario y te llevaremos al proceso de registro para convertirte en estudiante.</p>
-              <button type="submit" class="btn btn-primary w-100">Registrarme como alumno</button>
-            </form>
-            <small class="d-block text-muted mt-3 text-center">¿Ya tienes cuenta? <a href="{{ route('login') }}">Inicia sesión aquí</a>.</small>
+            <a href="{{ route('register') }}" class="btn btn-primary w-100">Registrarme como alumno</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 @endsection

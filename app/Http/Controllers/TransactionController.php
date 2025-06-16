@@ -10,14 +10,13 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        // Cargo el usuario con sus reservas y eventos a través de reservas
-        $transactions = Transaction::with('user.bookings.event', 'user.student')->paginate(10);
+        $transactions = Transaction::with('user.student')->paginate(10);
         return view('admin.transaction.index', compact('transactions'));
     }
 
     public function create()
     {
-        $users = User::all(); // Para el select de alumnos registrados
+        $users = User::all();
         return view('admin.transaction.create', compact('users'));
     }
 
@@ -26,23 +25,23 @@ class TransactionController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'price_per_entry' => 'required|numeric|min:0',
+            'enrollment_fee' => 'nullable|numeric|min:0',
         ]);
 
-        $user = User::with('bookings')->findOrFail($request->user_id);
+        $enrollment_fee = $request->input('enrollment_fee', 0);
 
-        // Sumamos la cantidad de todas las reservas para ese usuario
-        $quantity = $user->bookings->sum('quantity');
-
-        $total_price = $quantity * $request->price_per_entry;
+        $total_price = $request->price_per_entry + $enrollment_fee;
 
         Transaction::create([
             'user_id' => $request->user_id,
             'price_per_entry' => $request->price_per_entry,
+            'enrollment_fee' => $enrollment_fee,
             'total_price' => $total_price,
         ]);
 
-        return redirect()->route('admin.transaction.index')->with('success', 'Transacción creada con éxito.');
+        return redirect()->route('admin.transaction.index')->with('success', 'Transacción creada correctamente.');
     }
+
 
     public function show(Transaction $transaction)
     {
@@ -59,21 +58,21 @@ class TransactionController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
+            'enrollment_fee' => 'required|numeric|min:0',
             'price_per_entry' => 'required|numeric|min:0',
         ]);
 
-        $user = User::with('bookings')->findOrFail($request->user_id);
-
-        $quantity = $user->bookings->sum('quantity');
-
         $transaction->update([
             'user_id' => $request->user_id,
+            'enrollment_fee' => $request->enrollment_fee,
             'price_per_entry' => $request->price_per_entry,
-            'total_price' => $quantity * $request->price_per_entry,
+            // Calcula total_price si aplica
+            'total_price' => $request->enrollment_fee + $request->price_per_entry,
         ]);
 
-        return redirect()->route('admin.transaction.index')->with('success', 'Transacción actualizada con éxito.');
+        return redirect()->route('admin.transaction.index')->with('success', 'Transacción actualizada.');
     }
+
 
     public function destroy(Transaction $transaction)
     {

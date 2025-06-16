@@ -9,7 +9,14 @@ const CURSOS = [
 window.addEventListener("load", () => {
     const btnMostrarCursos = document.getElementById("btnMostrarCursos");
     if (btnMostrarCursos) {
+        // Escuchar click (escritorio)
         btnMostrarCursos.addEventListener("click", toggleCursos);
+
+        // Escuchar touchstart (móvil)
+        btnMostrarCursos.addEventListener("touchstart", (e) => {
+            e.preventDefault();  // Prevenir doble evento (click después de touch)
+            toggleCursos();
+        });
     }
 });
 
