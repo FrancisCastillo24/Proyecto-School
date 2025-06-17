@@ -6,22 +6,9 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware(function ($request, $next) {
-            $user = Auth::user();
-            if ($request->is('admin/*') && (!$user || !$user->isAdmin())) {
-                abort(403, 'Acceso no autorizado');
-            }
-            return $next($request);
-        });
-    }
 
     public function create()
     {

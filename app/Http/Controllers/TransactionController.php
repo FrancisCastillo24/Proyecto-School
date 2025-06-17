@@ -25,8 +25,9 @@ class TransactionController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'price_per_entry' => 'required|numeric|min:0',
-            'enrollment_fee' => 'nullable|numeric|min:0',
+            'enrollment_fee' => 'required|numeric|min:0',  // obligatorio
         ]);
+
 
         $enrollment_fee = $request->input('enrollment_fee', 0);
 

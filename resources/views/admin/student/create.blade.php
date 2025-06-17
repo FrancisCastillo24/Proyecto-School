@@ -4,6 +4,9 @@
 <div class="container mt-4">
     <h2 class="mb-4">Registrar nuevo estudiante</h2>
 
+    <div id="jsErrors" style="color: red; margin-bottom: 1rem;"></div>
+
+    
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul class="mb-0">

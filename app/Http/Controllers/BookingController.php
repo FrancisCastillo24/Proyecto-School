@@ -51,7 +51,10 @@ class BookingController extends Controller
             'name'     => 'required|string|max:100',
             'event_id' => 'required|exists:events,id',
             'quantity' => 'required|integer|min:1',
-            'phone'    => 'required|string|max:20',
+            'phone'    => [
+                'required',
+                'regex:/^[6-7]\d{8}$/',
+            ],
         ];
 
         $validated = $request->validate($rules);
@@ -73,6 +76,7 @@ class BookingController extends Controller
 
         return redirect()->route('booking.index')->with('success', 'Reserva creada con éxito');
     }
+
 
     // Mostrar formulario para editar reserva
     public function edit(string $id)

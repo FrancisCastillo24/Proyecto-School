@@ -23,7 +23,7 @@
 
     <div class="mb-3">
         <label for="phone" class="form-label">Teléfono</label>
-        <input type="text" name="phone" id="phone" class="form-control" placeholder="Ej. 600123456" required>
+        <input type="tel" class="form-control" id="phone" name="phone" minlength="9" maxlength="9" placeholder="Ej. 612345678">
     </div>
 
     <button type="submit" class="btn btn-primary w-100">Reservar</button>

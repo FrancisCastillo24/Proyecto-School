@@ -4,7 +4,7 @@
     <div class="container bg-white shadow rounded p-4 w-100" style="max-width: 600px;">
         <h2 class="mb-4 text-primary">Editar Estudiante</h2>
 
-        <form action="{{ route('student.update', $student->id) }}" method="POST">
+        <form action="{{ route('admin.student.update', $student->id) }}" method="POST" id="studentEditForm">
             @csrf
             @method('PUT')
 
