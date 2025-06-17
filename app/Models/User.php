@@ -79,4 +79,18 @@ class User extends Authenticatable
         // return $this->hasMany(Event::class);
         return $this->hasMany(Event::class);
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+
+    // Si elimino un usuario, se elimina la transación (una forma de hacerlo en lugar de en cascada desde migración)
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+            $user->transactions()->delete();
+        });
+    }
 }

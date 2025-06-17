@@ -76,10 +76,26 @@ class StudentController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'address' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => ['required', 'regex:/^[67]\d{8}$/'], // teléfono válido
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|email|unique:users,email,' . $request->user_id,
         ]);
 
         $student = Student::findOrFail($id);
+
+        // Actualiza usuario relacionado con el user_id
+        $user = User::find($request->user_id);
+        if ($user) {
+            if ($request->filled('name')) {
+                $user->name = $request->name;
+            }
+            if ($request->filled('email')) {
+                $user->email = $request->email;
+            }
+            $user->save();
+        }
+
+        // Actualiza datos del estudiante
         $student->update([
             'user_id' => $request->user_id,
             'address' => $request->address,
@@ -88,6 +104,7 @@ class StudentController extends Controller
 
         return redirect()->route('admin.student.index')->with('success', 'Estudiante actualizado correctamente');
     }
+
 
     public function destroy(string $id)
     {

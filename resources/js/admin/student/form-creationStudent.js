@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             errors.push("El teléfono debe contener 9 dígitos y comenzar con 6 o 7.");
         }
 
+
         if (errors.length > 0) {
             // No se envía el formulario
             e.preventDefault();
@@ -79,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Ponemos en el errorDiv una lista con cada error
             errorDiv.innerHTML = '<ul><li>' + errors.join('</li><li>') + '</li></ul>';
 
-             // Mostramos el div de errores para que se vea
+            // Mostramos el div de errores para que se vea
             errorDiv.style.display = 'block';
 
             // Bajamos la ventana suavemente para que se vea el formulario (y los errores)

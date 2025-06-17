@@ -58,9 +58,9 @@
                     </p>
                     <p class="mb-0 text-muted fst-italic" style="font-size: 0.9rem;">
                         Ejemplo: Si el precio es 10€, y reservas para 3 personas, el total será 30€.
-                    </p>
+                    </p><br>
                     <p class="mb-2">
-                        Si tienen alguna duda o quieren realizar una reserva más comodo, contacten al 758525252
+                        Si tienen alguna duda, consulta sobre tus reservas o quieren realizarlas de manera más cómodo, contacten al 758525252
                     </p>
                 </div>
             </div>

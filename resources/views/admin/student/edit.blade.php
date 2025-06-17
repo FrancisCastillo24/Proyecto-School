@@ -8,17 +8,23 @@
             @csrf
             @method('PUT')
 
+            <hr>
+
+            <input type="hidden" name="user_id" value="{{ $student->user_id }}">
+
             <div class="mb-3">
-                <label for="user_id" class="form-label">Usuario</label>
-                <select name="user_id" id="user_id" class="form-select" required>
-                    <option value="">Selecciona un usuario</option>
-                    @foreach ($users as $user)
-                        <option value="{{ $user->id }}" {{ $student->user_id == $user->id ? 'selected' : '' }}>
-                            {{ $user->name }} ({{ $user->email }})
-                        </option>
-                    @endforeach
-                </select>
+                <label for="name" class="form-label">Nombre (opcional)</label>
+                <input type="text" name="name" id="name" class="form-control"
+                       value="{{ old('name', $student->user->name) }}" placeholder="Editar nombre (no obligatorio)">
             </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email (opcional)</label>
+                <input type="email" name="email" id="email" class="form-control"
+                       value="{{ old('email', $student->user->email) }}" placeholder="Editar email (no obligatorio)">
+            </div>
+
+            <hr>
 
             <div class="mb-3">
                 <label for="address" class="form-label">Dirección</label>
