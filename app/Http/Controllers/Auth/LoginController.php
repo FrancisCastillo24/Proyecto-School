@@ -29,12 +29,14 @@ class LoginController extends Controller
             Cookie::queue(Cookie::forget('email'));
         }
 
+        // La cuenta ha sido rechazada (el campo está en tabla user)
         if ($user->is_rejected) {
             Auth::logout();
 
             return redirect()->route('login')->with('error', 'Tu cuenta fue rechazada. No puedes iniciar sesión.');
         }
 
+        // La cuenta pendiente de aprobación
         if (!$user->is_approved) {
             Auth::logout();
 

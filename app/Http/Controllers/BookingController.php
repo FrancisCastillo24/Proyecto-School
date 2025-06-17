@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
-    // Listar reservas según rol
+    // Listar reservas según el rol
     public function index()
     {
         $user = Auth::user();
 
         if ($user && $user->isAdmin()) {
+            // event porque está relacionado con un evento
             $bookings = Booking::with('event')->paginate(5);
             return view('admin.booking.index', compact('bookings'));
         }
@@ -35,6 +36,12 @@ class BookingController extends Controller
 
         $events = Event::all(['id', 'name']);
 
+        /**
+         * 
+         * Si la petición se hizo por AJAX (sin recargar la página)
+         * Se devuelve una respuesta en formato JSON con un mensaje y los datos de la reserva (con el evento incluido).
+         * 
+         */
         if ($request->ajax()) {
             // Devuelve solo el fragmento para insertar vía JS
             return view('user.booking._form', compact('events'));
@@ -110,6 +117,10 @@ class BookingController extends Controller
     // Eliminar reserva
     public function destroy(Booking $booking)
     {
+        /*
+        * Por si alguien intenta hacer la acción directamente (por ejemplo, enviando la URL para borrar), Laravel también bloquea la acción 
+        * porque el authorize no permitirá que continúe si no eres admin.
+        */
         $this->authorize('delete', $booking);
 
         $booking->delete();

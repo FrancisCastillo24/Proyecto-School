@@ -37,7 +37,7 @@ class ReviewController extends Controller
         ]);
 
         Review::create([
-            'user_id' => auth::User()->id,  // asignamos el usuario autenticado
+            'user_id' => auth::User()->id,  // quien se ha autenticado
             'opinion' => $request->opinion,
             'rating' => $request->rating
         ]);

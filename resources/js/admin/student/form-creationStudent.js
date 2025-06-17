@@ -9,8 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     errorDiv.style.borderRadius = '4px';
     errorDiv.style.display = 'none';
 
+    // Añadimos el elemento errorDiv al principio
     form.prepend(errorDiv);
 
+    // Cuando enviemos formulario
     form.addEventListener('submit', (e) => {
         errorDiv.innerHTML = '';
         errorDiv.style.display = 'none';
@@ -71,10 +73,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (errors.length > 0) {
+            // No se envía el formulario
             e.preventDefault();
+
+            // Ponemos en el errorDiv una lista con cada error
             errorDiv.innerHTML = '<ul><li>' + errors.join('</li><li>') + '</li></ul>';
+
+             // Mostramos el div de errores para que se vea
             errorDiv.style.display = 'block';
+
+            // Bajamos la ventana suavemente para que se vea el formulario (y los errores)
             window.scrollTo({ top: form.offsetTop - 20, behavior: 'smooth' });
         }
+
     });
 });

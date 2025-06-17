@@ -56,12 +56,14 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        // Verificar si el email está bloqueado
+        // Verificar si el email está bloqueado (uso DB ya que no es necsario crear un modelo de blocked sino es una consulta rápida)
         $isBlocked = DB::table('blocked_emails')
+             // La columna email sea igual al valor que el usuario envió en el formulario 
             ->where('email', $request->input('email'))
             ->exists();
 
         if ($isBlocked) {
+            // Redirigue hacia atrás y aparece un mensaje de error
             return redirect()->back()->withErrors([
                 'email' => 'Este correo ha sido bloqueado por el administrador.',
             ])->withInput();
@@ -70,6 +72,7 @@ class RegisterController extends Controller
         // Validar datos y registrar
         $this->validator($request->all())->validate();
 
+        // Se crea y guarda el nuevo usuario en la base de datos.
         $user = $this->create($request->all());
 
         return redirect()->route('login')->with('success', 'Tu cuenta está pendiente de aprobación por el administrador');

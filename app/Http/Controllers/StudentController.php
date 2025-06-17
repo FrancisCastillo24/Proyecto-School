@@ -29,7 +29,7 @@ class StudentController extends Controller
         if ($request->filled('user_id')) {
             $user_id = $request->user_id;
 
-            // Asegurar que el usuario tenga el rol y esté aprobado también (opcional)
+            // Nos aseguramos que el usuario tenga el rol y esté aprobado también (es opcional)
             $user = User::find($user_id);
             $user->update([
                 'role' => 'student',
@@ -59,6 +59,7 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::all();
+        // Buscamos con where aquellos que no son estudiante
         $usuariosSinEstudiante = User::whereDoesntHave('student')->count();
         return view('admin.student.index', compact('students', 'usuariosSinEstudiante'));
     }

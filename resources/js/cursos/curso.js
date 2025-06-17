@@ -26,6 +26,7 @@ function toggleCursos() {
     const btnMostrarCursos = document.getElementById("btnMostrarCursos");
 
     if (tablaExistente) {
+        // removeChild elimina elemento hijo del elemento padre
         contenedor.removeChild(tablaExistente);
         btnMostrarCursos.textContent = "Mostrar Cursos";
     } else {

@@ -27,7 +27,7 @@ class HomeController extends Controller
         return view('homeUser');
     }
 
-
+    // Privilegios para acceder al panel administrador
     public function homeAdmin()
     {
         $user = auth::User();
